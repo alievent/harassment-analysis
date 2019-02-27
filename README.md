@@ -1,11 +1,12 @@
 # harassment-analysis
+This repositary is for harassment analysis on safeCity data. It has two files at present.
 
 story_and_category.csv file
 -	This file contains all the stories up to date and their corresponding categories regarding the harassment types
 
 key_info_and_classes_part.csv
--	Contains part of the manually labeled stories. 
--	More will be added after they are cleaned.
+-	Currently only contains part of the labeled online stories. 
+-	More stories will be added after they are cleaned, e.g. sensitive data being masked.
 
 The meaning of the integer labels are:
 harasser_types:
