@@ -6,7 +6,7 @@ story_and_category.csv file
 
 key_info_and_classes_part.csv
 -	Currently only contains part of the labeled online stories. 
--	More stories will be added after they are cleaned, e.g. sensitive data being masked.
+-	More stories will be added after they are cleaned, e.g. sensitive data being handled properly.
 
 The meaning of the integer labels are:
 harasser_types:
