@@ -41,4 +41,3 @@ location_types:
 'other' - 13
 ]
 
-
