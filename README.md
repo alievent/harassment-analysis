@@ -1,5 +1,5 @@
 # harassment-analysis
-This repositary is for harassment analysis on safeCity data. It has two files at present.
+This repositary is for harassment analysis on safeCity data. 
 
 story_and_category.csv file
 -	This file contains all the stories up to date and their corresponding categories regarding the harassment types
