@@ -91,12 +91,7 @@ def evalReport(y_true, y_pred,config,num_classes):
                                                                                                          num_classes),
                                                                                             pos_label=None,
                                                                                             average='macro')
-    weight_precision, weight_recall, weight_f1_score, status = precision_recall_fscore_support(y_true,
-                                                                                            y_pred,
-                                                                                            labels=range(0,
-                                                                                                         num_classes),
-                                                                                            pos_label=None,
-                                                                                            average='weighted')
+
     cls_precision, cls_recall, cls_f1_score, status = precision_recall_fscore_support(y_true,
                                                                                       y_pred,
                                                                                       labels=range(0,
@@ -110,8 +105,6 @@ def evalReport(y_true, y_pred,config,num_classes):
         micro_precision, micro_recall, micro_f1_score) \
              +"macro_precision : %f, macro_recall %f, macro_f1_score %f \n" % (
         macro_precision, macro_recall, macro_f1_score) \
-             + "weighted_precision : %f, macro_recall %f, macro_f1_score %f \n" % (
-        weight_precision, weight_recall, weight_f1_score) \
              + "p r f for each cls :\n" + str(cls_precision) + '\n' + str(cls_recall) + '\n' + str(cls_f1_score)+'\n' \
              + 'accuracy: %f ' % accuracy
 
