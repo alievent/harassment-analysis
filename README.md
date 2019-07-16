@@ -46,3 +46,7 @@ Train and Eval
 use trainEval.py to train a model specified by a config file.
 - The "extraction_file" refer to path to key element annotation files (.json).
 - The "classification_file" refer to class label file (.csv)
+
+model implementations are in models
+
+Single task or joint learning can be selected by setting config.task ( options = ['cls','extraction'])
