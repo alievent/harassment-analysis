@@ -56,12 +56,12 @@ if __name__ == '__main__':
     doc_tokens, doc_tags =segment_sentences_train(doc_tokens, doc_tags, config.delimiters)
 
     train_tokens, train_class_labels, train_tags = merge_data(doc_tokens, doc_tags, doc_cls, doc_forms,
-                                                              config.cls_names, config.form_names, train_ids, config.filter)
+                                                              config.cls_names, config.form_names, train_ids)
     dev_tokens,dev_class_labels, dev_tags = merge_data(doc_tokens, doc_tags, doc_cls, doc_forms, config.cls_names,
-                                                          config.form_names, dev_ids,config.filter)
+                                                          config.form_names, dev_ids)
 
     test_tokens,test_class_labels, test_tags = merge_data(doc_tokens, doc_tags, doc_cls, doc_forms, config.cls_names,
-                                                          config.form_names, test_ids,config.filter)
+                                                          config.form_names, test_ids)
 
 
     if config.pre_trained_wordVectors_path.endswith('.bin') :

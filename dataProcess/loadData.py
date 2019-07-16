@@ -158,12 +158,10 @@ def load_forms(data_file):
 
             if i >= 0:
                 id = int(row[0])
-                description = row[1]
                 commenting = int(row[2])
                 ogling = int(row[3])
                 touching = int(row[4])
                 docs[id] = {}
-                #corpus[id]['description'] = description
                 docs[id]['commenting'] = [int(commenting)]
                 docs[id]['ogling'] = [int(ogling)]
                 docs[id]['touching'] = [int(touching)]
@@ -230,6 +228,6 @@ def merge_data(docs_tokens, docs_tags, doc_cls, doc_forms, cls_names, form_names
         for cls in cls_names:
             class_labels[cls].append(labels[cls][0])
         tags.append(docs_tags[docId])
-    print('missing ids', len(missing_ids))
+    #print('missing ids', len(missing_ids))
     return tokens, class_labels, tags
 
