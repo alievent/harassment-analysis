@@ -224,7 +224,7 @@ def merge_data(docs_tokens, docs_tags, doc_cls, doc_forms, cls_names, form_names
 
 
         if filter and tmp:
-            print(str(docId) + ' filtered')
+            #print(str(docId) + ' filtered')
             continue
         tokens.append(docs_tokens[docId])
         for cls in cls_names:

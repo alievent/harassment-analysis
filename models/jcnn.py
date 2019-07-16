@@ -84,7 +84,6 @@ class Model(object):
         # Add dropout
         with tf.variable_scope('cnn-dropout-%s'%scope):
             cnn_drop = tf.nn.dropout(h_pool_flat, self.cnn_dropout_keep_prob)
-            print(cnn_drop)
         return cnn_drop
 
     def tag_cnn_features(self):
@@ -124,7 +123,6 @@ class Model(object):
 
 
         self.mask = tf.sequence_mask(self.doc_actual_length, self.doc_max_length)
-        print('mask',self.mask)
         with tf.name_scope("tag_output"):
             self.word_tag_predictions = tf.stack(self.word_tag_predictions,1)
             self.word_tag_predictions=tf.boolean_mask(self.word_tag_predictions,self.mask,name = 'predictions',axis=0)
