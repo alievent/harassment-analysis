@@ -120,7 +120,7 @@ class Vocabulary(object):
                     self.add_word(tk)
                 for pos in nltk.pos_tag(sent):
                     posTag = pos[1]
-                    if posTag in selected_posTag or len(selected_posTag) == 0 or not selected_posTag:
+                    if not selected_posTag or posTag in selected_posTag or len(selected_posTag) == 0 :
                         self.add_pos(posTag)
                     else:
                         self.add_pos(POS_UNK)
