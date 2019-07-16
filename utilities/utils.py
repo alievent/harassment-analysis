@@ -48,6 +48,36 @@ def processBatchResultsForCls(doc_actual_length, predictions,doc_max_length):
         prev_doc_len += l
     return docs_tags
 
+def segment_sentences_train(docs, labels, delimiters):
+    segmented_docs = {}
+    segmented_labels ={}
+    for id in docs:
+        doc = docs[id]
+        label = labels[id]
+        sent = []
+        sent_label = []
+        segmented_doc = []
+        segmented_label = []
+        for j in range(len(doc)):
+            tk = doc[j]
+            l = label[j]
+            sent.append(tk)
+            sent_label.append(l)
+
+            if tk in delimiters:
+                segmented_doc.append(sent)
+                segmented_label.append(sent_label)
+                assert len(sent) == len(sent_label)
+                sent =[]
+                sent_label =[]
+        if len(sent) > 0 :
+            segmented_doc.append(sent)
+            segmented_label.append(sent_label)
+        assert len(segmented_doc) == len(segmented_label)
+        segmented_docs[id]= segmented_doc
+        segmented_labels[id]=segmented_label
+    return segmented_docs,segmented_labels
+
 def evalReport(y_true, y_pred,config,num_classes):
     micro_precision, micro_recall, micro_f1_score, status = precision_recall_fscore_support(y_true,
                                                                                             y_pred,

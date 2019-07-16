@@ -233,32 +233,3 @@ def merge_data(docs_tokens, docs_tags, doc_cls, doc_forms, cls_names, form_names
     print('missing ids', len(missing_ids))
     return tokens, class_labels, tags
 
-def segment_sentences_train(docs, labels, delimiters):
-    segmented_docs = {}
-    segmented_labels ={}
-    for id in docs:
-        doc = docs[id]
-        label = labels[id]
-        sent = []
-        sent_label = []
-        segmented_doc = []
-        segmented_label = []
-        for j in range(len(doc)):
-            tk = doc[j]
-            l = label[j]
-            sent.append(tk)
-            sent_label.append(l)
-
-            if tk in delimiters:
-                segmented_doc.append(sent)
-                segmented_label.append(sent_label)
-                assert len(sent) == len(sent_label)
-                sent =[]
-                sent_label =[]
-        if len(sent) > 0 :
-            segmented_doc.append(sent)
-            segmented_label.append(sent_label)
-        assert len(segmented_doc) == len(segmented_label)
-        segmented_docs[id]= segmented_doc
-        segmented_labels[id]=segmented_label
-    return segmented_docs,segmented_labels
