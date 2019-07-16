@@ -9,7 +9,7 @@ import random
 import sys
 
 
-class BiLSTMModel3(BaseModel):
+class JBiLSTMModel(BaseModel):
     def __init__(self,config):
         BaseModel.__init__(self,config)
 
