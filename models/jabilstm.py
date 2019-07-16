@@ -1,6 +1,6 @@
 import tensorflow as tf
 from .attention import attention
-class BiLSTM(object):
+class Model(object):
     def __init__(self, config,vectors):
         self.doc_max_length = config.doc_max_length
         self.sequence_length = config.window_size * 2 +1
