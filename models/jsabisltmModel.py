@@ -5,8 +5,7 @@ from .jabilstm import Model
 from sklearn.metrics import precision_recall_fscore_support
 from utilities.utils import evalReport
 import datetime
-import random
-import sys
+
 
 
 class JSABilSTMModel(BaseModel):

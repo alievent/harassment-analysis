@@ -2,7 +2,7 @@ from models.cnnModel import CNNModel
 from models.jcnnModel import JCNNModel
 from models.jacnnModel import JACNNModel
 from models.jsacnnModel import JSACNNModel
-from models.jabiLSTMModel import JABiLSTMModel
+from models.jabilstmModel import JABiLSTMModel
 
 
 from configs.config import Config
