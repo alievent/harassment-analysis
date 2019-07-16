@@ -8,7 +8,7 @@ import datetime
 
 
 
-class JSABilSTMModel(BaseModel):
+class JSABiLSTMModel(BaseModel):
     def __init__(self,config):
         BaseModel.__init__(self,config)
 
