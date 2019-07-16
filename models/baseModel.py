@@ -95,7 +95,7 @@ class BaseModel(object):
         for e in np.arange(self.config.num_epochs):
             sum_loss = 0
             for step, trainBatch in enumerate(data_iterator(
-                    trainData, batch_size=self.config.batch_size, shuffle=True, alpha=self.config.alpha)):
+                    trainData, batch_size=self.config.batch_size, shuffle=True)):
                 sum_loss += self.train_step(trainBatch, e)
 
                 current_step = tf.train.global_step(self.sess, self.global_step)

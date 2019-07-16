@@ -41,3 +41,8 @@ location_types:
 'other' - 13
 ]
 
+Train and Eval
+
+use trainEval.py to train a model specified by a config file.
+- The "extraction_file" refer to path to key element annotation files (.json).
+- The "classification_file" refer to class label file (.csv)

@@ -70,11 +70,9 @@ if __name__ == '__main__':
     else:
         pretrained_word_vectors = loadWordVecfromText(config.pre_trained_wordVectors_path)
 
-    #included_tags = config.included_tags
-    selected_posTag = config.selected_posTag
-    #build vocabulary
+
     vocab = Vocabulary(config)
-    vocab.buildVocabulary(train_tokens, selected_posTag)
+    vocab.buildVocabulary(train_tokens)
     if config.max_num_words > 0:
         vocab.limit_vocab(config.max_num_words)
     pickle.dump(vocab, open(config.vocab_path, "wb"))

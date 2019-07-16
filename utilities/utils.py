@@ -1,14 +1,13 @@
 import numpy as np
 from sklearn.metrics import precision_recall_fscore_support,accuracy_score
 
-def data_iterator(orig_data, batch_size=50, shuffle=True, alpha=1):
+def data_iterator(orig_data, batch_size=50, shuffle=True):
     data = orig_data
     for key in data:
         data[key] = np.array(data[key])
     if shuffle:
         indices = np.random.permutation(len(data['input_doc']))
         for key in data:
-            print(key)
             data[key] = data[key][indices]
 
 

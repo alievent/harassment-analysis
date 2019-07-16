@@ -113,14 +113,14 @@ class Vocabulary(object):
 
         self.wordVectors = self.load_bin_vec(vocab_bin)
 
-    def buildVocabulary(self, docs,selected_posTag):
+    def buildVocabulary(self, docs,selected_posTag=None):
         for doc in docs:
             for sent in doc:
                 for tk in sent:
                     self.add_word(tk)
                 for pos in nltk.pos_tag(sent):
                     posTag = pos[1]
-                    if posTag in selected_posTag or len(selected_posTag) == 0:
+                    if posTag in selected_posTag or len(selected_posTag) == 0 or not selected_posTag:
                         self.add_pos(posTag)
                     else:
                         self.add_pos(POS_UNK)
