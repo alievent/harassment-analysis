@@ -2,7 +2,9 @@ from models.cnnModel import CNNModel
 from models.jcnnModel import JCNNModel
 from models.jacnnModel import JACNNModel
 from models.jsacnnModel import JSACNNModel
+from models.jbilstmModel import JBiLSTMModel
 from models.jabilstmModel import JABiLSTMModel
+from models.jsabilstmModel import JSABiLSTMModel
 
 
 from configs.config import Config
@@ -19,14 +21,18 @@ if __name__ == '__main__':
     config = Config()
     if config.model == 'CNN':
         model = CNNModel(config)
-    elif config.model == 'JABiLSTM':
-        model = JABiLSTMModel(config)
     elif config.model == 'JCNN':
         model = JCNNModel(config)
     elif config.model == 'JACNN':
         model = JACNNModel(config)
     elif config.model == 'JSACNN':
         model = JSACNNModel(config)
+    elif config.model == 'JBiLSTM':
+        model = JBiLSTMModel(config)
+    elif config.model == 'JABiLSTM':
+        model = JABiLSTMModel(config)
+    elif config.model == 'JSABiLSTM':
+        model = JSABiLSTMModel(config)
     else:
        raise Exception
     if not os.path.exists(config.train_path):
