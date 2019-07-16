@@ -98,20 +98,15 @@ class Vocabulary(object):
             self.size = len(self.idx2word)
 
     def load_bin_vec(self, vocab_bin):
-        """
-            Loads 300x1 word vecs from Google (Mikolov) word2vec
-            """
         word_vecs = np.zeros((len(self.word2idx), self.config.word_embedding_size))
         count = 0
 
         for word in self.word2idx:
-            # print word
             if vocab_bin is not None and word in vocab_bin:
                 count += 1
                 word_vecs[self.word2idx[word]] = (vocab_bin[word])
             else:
                 word_vecs[self.word2idx[word]] = (np.random.uniform(-0.25, 0.25, self.config.word_embedding_size))
-                # print("found %d" %count)
         return word_vecs
 
     def loadWordVectors(self, vocab_bin):

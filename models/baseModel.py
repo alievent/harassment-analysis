@@ -7,13 +7,6 @@ class BaseModel(object):
     """Generic class for general methods that are not specific to NER"""
 
     def __init__(self, config):
-        """Defines self.config and self.logger
-
-        Args:
-            config: (Config instance) class with hyper parameters,
-                vocab and embeddings
-
-        """
         self.config = config
         self.sess   = None
         self.loss = None
@@ -30,11 +23,7 @@ class BaseModel(object):
         self.out_dir = os.path.abspath(os.path.join(config.train_path, "runs-" + config.output_prefix, self.timestamp))
         self.checkpoint_dir = os.path.abspath(os.path.join(self.out_dir, "checkpoints"))
         self.checkpoint_path= os.path.join(self.checkpoint_dir, "model")
-
-        # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
         self.final_prefix = os.path.join(self.checkpoint_dir, "final")
-
-
 
         self.best_f_dev_cls = 0
         self.best_f_dev_tag = 0
@@ -50,9 +39,6 @@ class BaseModel(object):
         self.vocab = vocab
 
     def initialize_session(self):
-        """Defines self.sess and initialize the variables"""
-        #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.333)
-        #self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
         session_conf = tf.ConfigProto(
             allow_soft_placement=self.config.allow_soft_placement,
           log_device_placement=self.config.log_device_placement)
@@ -110,10 +96,6 @@ class BaseModel(object):
             sum_loss = 0
             for step, trainBatch in enumerate(data_iterator(
                     trainData, batch_size=self.config.batch_size, shuffle=True, alpha=self.config.alpha)):
-                # Training loop. For each batch...
-
-                # size_batch = len(x_batch)
-                # print("current step ", step)
                 sum_loss += self.train_step(trainBatch, e)
 
                 current_step = tf.train.global_step(self.sess, self.global_step)
@@ -121,7 +103,6 @@ class BaseModel(object):
                 print("\nDevolope:")
                 p_dev_cls, r_dev_cls, f_dev_cls, p_dev_tag, r_dev_tag, f_dev_tag = self.eval_step(devData)
 
-                # best_f1_dev = max(f1_dev,best_f1_dev)
                 if self.best_f_dev_cls + self.best_f_dev_tag < f_dev_cls + f_dev_tag:
                     self.best_f_dev_cls = f_dev_cls
                     self.best_p_dev_cls = p_dev_cls
@@ -131,16 +112,6 @@ class BaseModel(object):
                     self.best_r_dev_tag = r_dev_tag
                     self.saveModel(self.checkpoint_path)
 
-                    #save_path = self.saver.save(self.sess, self.checkpoint_path, global_step=current_step)
-                    #print("Saved model checkpoint to {}\n".format(save_path))
-
-                '''
-                if self.best_f_dev_tag < f_dev_tag:
-                    self.best_f_dev_tag = f_dev_tag
-                    self.best_p_dev_tag = p_dev_tag
-                    self.best_r_dev_tag = r_dev_tag
-                    self.saveModel(self.checkpoint_path)
-                '''
         print("\nDevelope:")
         p_dev_cls, r_dev_cls, f_dev_cls, p_dev_tag, r_dev_tag, f_dev_tag = self.eval_step(devData)
 
@@ -152,13 +123,6 @@ class BaseModel(object):
             self.best_p_dev_tag = p_dev_tag
             self.best_r_dev_tag = r_dev_tag
             self.saveModel(self.checkpoint_path)
-        '''
-        if self.best_f_dev_tag < f_dev_tag:
-            self.best_f_dev_tag = f_dev_tag
-            self.best_p_dev_tag = p_dev_tag
-            self.best_r_dev_tag = r_dev_tag
-            self.saveModel(self.checkpoint_path)
-        '''
 
 
 

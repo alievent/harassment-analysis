@@ -28,10 +28,7 @@ class JSACNNModel(BaseModel):
                     for _ in range(len(batch['input_words']))]
         position = np.array(position)
         batch_words = batch['input_words']
-        #print(batch_x[0])
         batch_tag = batch['input_tag']
-        #print(batch_tag[0])
-
         batch_doc_actual_length=batch['input_doc_actual_length']
 
         feed_dict = {
@@ -43,11 +40,6 @@ class JSACNNModel(BaseModel):
         }
         for cls_name in self.config.cls_names:
             feed_dict[self.model.input_cls[cls_name]] = batch[cls_name]
-
-        #print(tf.shape(self.model.doc_input).eval(feed_dict,self.sess))
-        #print(tf.shape(self.model.word_features[1]).eval(feed_dict,self.sess))
-        #print(self.model.cnn_drop_shape.eval(feed_dict,self.sess))
-        #print(tf.shape(self.model.doc_features).eval(feed_dict,self.sess))
 
         _, step, summaries, loss = self.sess.run(
             [self.train_op, self.global_step, self.train_summary_op, self.loss],
@@ -66,7 +58,6 @@ class JSACNNModel(BaseModel):
         for cls_name in self.config.cls_names:
             doc_cls_predictions[cls_name] = []
         tag_prediction=[]
-        # y_prediction = np.array([])
         num_of_batches = int((len(data['input_words']) - 1) / self.config.batch_size) + 1
         for batch_num in range(num_of_batches):
             start_index = batch_num * self.config.batch_size
@@ -93,18 +84,13 @@ class JSACNNModel(BaseModel):
             step, summaries, doc_cls_pred,tag_pred = self.sess.run(
                 [self.global_step, self.dev_summary_op, self.model.doc_cls_predictions, self.model.word_tag_predictions],
                 feed_dict)
-            # print type(y_pred)
             for cls_name in self.config.cls_names:
                 doc_cls_predictions[cls_name].extend(doc_cls_pred[cls_name])            #print('doc',doc_cls_pred)
 
             tag_prediction.extend(tag_pred)
-            #print('tag',tag_pred)
-            #print(len(tag_prediction))
-            #print(type(tag_prediction[0]))
+
         doc_precision, doc_recall, doc_f1_score = 0,0,0
         for cls_name in self.config.cls_names:
-            #print(cls_name)
-            #print(len(data[cls_name]),len(data['input_doc']))
             p, r, f, status = precision_recall_fscore_support(data[cls_name], np.array(doc_cls_predictions[cls_name]),
                                                                                 labels=range(0, self.config.num_classes[cls_name]),
                                                                                 pos_label=None,
@@ -121,19 +107,12 @@ class JSACNNModel(BaseModel):
         for tag in tag_prediction:
             pred_tags.append(tag)
 
-        #print(len(pred_tags))
-        tag_precision, tag_recall, tag_f1_score, status = precision_recall_fscore_support(tags,np.array(pred_tags),
-                                                                              labels=range(0, self.config.num_tags),
-                                                                              pos_label=None,
-                                                                              average='micro')
-        print('tag 0',tag_precision, tag_recall, tag_f1_score)
-
         tag_precision, tag_recall, tag_f1_score, status = precision_recall_fscore_support(tags,np.array(pred_tags),
                                                                               labels=range(1, self.config.num_tags),
                                                                               pos_label=None,
                                                                               average='micro')
+        print('tag',tag_precision, tag_recall, tag_f1_score)
 
-        print('tag 1',tag_precision, tag_recall, tag_f1_score)
         if len(self.config.cls_names) > 0:
             tmp = len(self.config.cls_names)
         else:
@@ -147,14 +126,7 @@ class JSACNNModel(BaseModel):
             savedModel_path = export_path + datetime.datetime.now().isoformat()
             self.config.model_path = savedModel_path
             self.builder = tf.saved_model.builder.SavedModelBuilder(savedModel_path)
-            '''
-            input_tensor_infos = {}
-            for tensor in input_tensors:
-                input_tensor_infos[tensor.name](tf.saved_model.utils.build_tensor_info(tensor))
-            output_tensor_infos = {}
-            for tensor in output_tensors:
-                output_tensor_infos.append(tf.saved_model.utils.build_tensor_info(tensor))
-            '''
+
             input_words_tensor_info = tf.saved_model.utils.build_tensor_info(self.model.input_words)
             input_relative_position_tensor_info = tf.saved_model.utils.build_tensor_info(self.model.input_relative_position)
             input_cnn_dropout_keep_prob_tensor_info = tf.saved_model.utils.build_tensor_info(self.model.cnn_dropout_keep_prob)
@@ -172,14 +144,12 @@ class JSACNNModel(BaseModel):
                     outputs=outputs,
                     method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME))
 
-            #legacy_init_op = tf.group(tf.tables_initializer(), name='legacy_init_op')
             self.builder.add_meta_graph_and_variables(
                 self.sess, [tf.saved_model.tag_constants.SERVING],
                 signature_def_map={
                     'predict_event':
                         prediction_signature,
                 })
-                #legacy_init_op=legacy_init_op)
 
         self.builder.save()
         self.builder = None
@@ -232,7 +202,6 @@ class JSACNNModel(BaseModel):
                 for cls_name in config.cls_names :
                     cls_predictions[cls_name] = []
                 tag_prediction=[]
-                # y_prediction = np.array([])
                 num_of_batches = int((len(test_data['input_words']) - 1) / batch_size) + 1
                 for batch_num in range(num_of_batches):
                     start_index = batch_num * batch_size
@@ -248,7 +217,6 @@ class JSACNNModel(BaseModel):
                                                                input_relative_position: position,
                                                                cnn_dropout_keep_prob: 1.0})
 
-                    # print type(y_pred)
                     for cls_name in config.cls_names:
                         cls_predictions[cls_name].extend(doc_cls_pred[cls_name])
                     tag_prediction.extend(tag_pred)

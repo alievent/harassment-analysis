@@ -42,7 +42,6 @@ class Model(object):
         with tf.name_scope('embedding'):
             wordVectors = tf.get_variable('word_vectors', initializer=initial,trainable=True)
             self.cnn_embedded_words = tf.nn.embedding_lookup(wordVectors, self.input_words)
-            #self.rnn_embedded_words = tf.nn.embedding_lookup(wordVectors, self.input_x_context)
             positionVectors = tf.get_variable(name='W', initializer=tf.random_uniform([self.sequence_length,
                                                              self.position_embedding_size], -1.0, 1.0))
 
@@ -52,14 +51,11 @@ class Model(object):
             self.concat_word_pos_embedded = tf.concat(
                 [self.cnn_embedded_words, self.embedded_position], 3)
             self.cnn_concat_word_pos_embedded_expanded = tf.expand_dims(self.concat_word_pos_embedded, -1)
-            #self.cnn_concat_word_pos_embedded_expanded = tf.expand_dims(self.cnn_embedded_words,-1)
 
     def add_cnn_layer(self, input, length,filter_sizes,embedding_size,scope):
         pooled_outputs = []
         for i, filter_size in enumerate(filter_sizes):
             with tf.variable_scope('%s-conv-maxpool-%s' % (scope,filter_size), reuse=tf.AUTO_REUSE):
-                # Convolution Layer
-                #filter_shape = [filter_size, self.word_embedding_size + self.position_embedding_size, 1, self.num_filters]
                 filter_shape = [filter_size, embedding_size , 1,
                                 self.num_filters]
                 W = tf.get_variable(name='W',initializer = tf.truncated_normal(filter_shape, stddev=0.1))
@@ -70,13 +66,8 @@ class Model(object):
                     strides=[1, 1, 1, 1],
                     padding='VALID',
                     name='conv')
-                #print(W)
-                #print(b)
-                # Apply nonlinearity
+
                 h = tf.nn.relu(tf.nn.bias_add(conv, b), name='relu')
-
-                # Maxpooling over the outputs
-
                 pooled = tf.nn.max_pool(
                     h,
                     ksize=[1, length - filter_size + 1, 1, 1],
@@ -108,15 +99,13 @@ class Model(object):
 
     def add_fc_layer(self,input,input_size,num_classes,scope):
 
-        #self.feature = self.cnn_drop
         with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
             W = tf.get_variable(
                 'W',
                 shape=[input_size, num_classes],
                 initializer=tf.contrib.layers.xavier_initializer())
             b = tf.get_variable(name='b',initializer=tf.constant(0.1, shape=[num_classes]))
-            #print(W)
-            #print(b)
+
             scores = tf.nn.xw_plus_b(input, W, b, name='scores')
             predictions = tf.argmax(scores, 1, name='predictions')
         return predictions, scores, W,b
@@ -137,20 +126,14 @@ class Model(object):
         self.mask = tf.sequence_mask(self.doc_actual_length, self.doc_max_length)
         print('mask',self.mask)
         with tf.name_scope("tag_output"):
-            #print('word_tag_predictions',self.word_tag_predictions[0].get_shape())
             self.word_tag_predictions = tf.stack(self.word_tag_predictions,1)
-            #print(self.word_tag_predictions.get_shape())
-
             self.word_tag_predictions=tf.boolean_mask(self.word_tag_predictions,self.mask,name = 'predictions',axis=0)
 
             print(self.word_tag_predictions)
-            #print('word_tag_scores',self.word_tag_scores[0].get_shape())
             self.word_tag_scores = tf.stack(self.word_tag_scores,1)
 
-            #print(self.word_tag_scores)
             self.word_tag_scores=tf.boolean_mask(self.word_tag_scores,self.mask,axis=0)
             self.word_tag_scores =tf.identity(self.word_tag_scores,name='scores')
-            #print(self.word_tag_scores)
     def doc_prediction(self):
         self.doc_input = tf.expand_dims(tf.stack(self.word_features, axis=1), -1)
         self.doc_cls_predictions = {}
@@ -166,8 +149,6 @@ class Model(object):
             self.l2_loss += tf.nn.l2_loss(W)
             self.l2_loss += tf.nn.l2_loss(b)
 
-        #print(self.doc_cls_scores)
-        #print(self.doc_cls_scores)
     def add_loss(self):
         with tf.name_scope('loss'):
             self.tag_losses = tf.constant(0.0)

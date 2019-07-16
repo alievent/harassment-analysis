@@ -17,8 +17,6 @@ class Model(object):
         self.tag_loss_weight = config.tag_loss_weight
         self.l2_reg_lambda = config.l2_reg_lambda
         self.input_doc = tf.placeholder(tf.int32, [None, self.doc_max_length], name='input_doc')
-
-        #self.input_relative_position = tf.placeholder(tf.int32, [None, self.doc_max_length, self.sequence_length], name='input_relative_position')
         self.cls_names = config.cls_names
         self.input_cls ={}
         for cls_name in self.cls_names:
@@ -26,7 +24,6 @@ class Model(object):
 
         self.cnn_dropout_keep_prob = tf.placeholder(tf.float32, name='cnn_dropout_keep_prob')
 
-        # Keeping track of l2 regularization loss (optional)
         self.l2_loss = tf.constant(0.0)
 
     def add_embedding_layer(self):
@@ -40,14 +37,11 @@ class Model(object):
             print(self.embedded_words)
 
             self.cnn_embedded_expanded = tf.expand_dims(self.embedded_words, -1)
-            #self.cnn_concat_word_pos_embedded_expanded = tf.expand_dims(self.cnn_embedded_words,-1)
 
     def add_cnn_layer(self, input, length,filter_sizes,embedding_size,scope):
         pooled_outputs = []
         for i, filter_size in enumerate(filter_sizes):
             with tf.variable_scope('%s-conv-maxpool-%s' % (scope,filter_size), reuse=tf.AUTO_REUSE):
-                # Convolution Layer
-                #filter_shape = [filter_size, self.word_embedding_size + self.position_embedding_size, 1, self.num_filters]
                 filter_shape = [filter_size, embedding_size , 1,
                                 self.num_filters]
                 W = tf.get_variable(name='W',initializer = tf.truncated_normal(filter_shape, stddev=0.1))
@@ -58,13 +52,8 @@ class Model(object):
                     strides=[1, 1, 1, 1],
                     padding='VALID',
                     name='conv')
-                #print(W)
-                #print(b)
-                # Apply nonlinearity
-                h = tf.nn.relu(tf.nn.bias_add(conv, b), name='relu')
 
-                # Maxpooling over the outputs
-                print(h)
+                h = tf.nn.relu(tf.nn.bias_add(conv, b), name='relu')
                 pooled = tf.nn.max_pool(
                     h,
                     ksize=[1, length - filter_size + 1, 1, 1],
@@ -72,13 +61,10 @@ class Model(object):
                     padding='VALID',
                     name='pool')
                 pooled_outputs.append(pooled)
-                print(pooled)
-        # Combine all the pooled features
         num_features = self.num_filters * len(self.filter_sizes)
         h_pool = tf.concat(pooled_outputs, 3)
         h_pool_flat = tf.reshape(h_pool, [-1, num_features])
 
-        # Add dropout
         with tf.variable_scope('cnn-dropout-%s'%scope):
             cnn_drop = tf.nn.dropout(h_pool_flat, self.cnn_dropout_keep_prob)
         return cnn_drop
@@ -94,8 +80,7 @@ class Model(object):
                 shape=[input_size, num_classes],
                 initializer=tf.contrib.layers.xavier_initializer())
             b = tf.get_variable(name='b',initializer=tf.constant(0.1, shape=[num_classes]))
-            #print(W)
-            #print(b)
+
             scores = tf.nn.xw_plus_b(input, W, b, name='scores')
             predictions = tf.argmax(scores, 1, name='predictions')
         return predictions, scores, W,b
@@ -116,8 +101,6 @@ class Model(object):
             self.l2_loss += tf.nn.l2_loss(W)
             self.l2_loss += tf.nn.l2_loss(b)
 
-        #print(self.doc_cls_scores)
-        #print(self.doc_cls_scores)
     def add_loss(self):
         with tf.name_scope('loss'):
 

@@ -14,7 +14,7 @@ class JSABilSTMModel(BaseModel):
         BaseModel.__init__(self,config)
 
     def buildModel(self):
-        self.model = BiLSTM(self.config,self.vocab.wordVectors)
+        self.model = Model(self.config,self.vocab.wordVectors)
         self.model.build()
         self.loss = self.model.loss
         self.add_optimizer()
@@ -123,23 +123,13 @@ class JSABilSTMModel(BaseModel):
         for tag in tag_prediction:
             pred_tags.append(tag)
 
-        #print(len(pred_tags))
-        tag_precision, tag_recall, tag_f1_score, status = precision_recall_fscore_support(tags,np.array(pred_tags),
-                                                                              labels=range(0, self.config.num_tags),
-                                                                              pos_label=None,
-                                                                              average='micro')
-        print('tag 0',tag_precision, tag_recall, tag_f1_score)
 
         tag_precision, tag_recall, tag_f1_score, status = precision_recall_fscore_support(tags,np.array(pred_tags),
                                                                               labels=range(1, self.config.num_tags),
                                                                               pos_label=None,
                                                                               average='micro')
 
-        #res_events = convert_result_input_toDoc(data['input_sample_tk_map'], doc_cls_prediction)
-        #test_res_events = convert_to_doc_event(res_events)
-        #p, r, f = cal_scores(data['input_events'], test_res_events)
-        #print(p, r, f)
-        print('tag 1',tag_precision, tag_recall, tag_f1_score)
+        print('tag',tag_precision, tag_recall, tag_f1_score)
 
         if len(self.config.cls_names) > 0:
             tmp = len(self.config.cls_names)

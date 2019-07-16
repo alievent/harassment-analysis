@@ -5,8 +5,7 @@ from .jcnn import Model
 from sklearn.metrics import precision_recall_fscore_support
 from utilities.utils import evalReport
 import datetime
-import random
-import sys
+
 
 
 class JCNNModel(BaseModel):
@@ -14,7 +13,7 @@ class JCNNModel(BaseModel):
         BaseModel.__init__(self,config)
 
     def buildModel(self):
-        self.model = CNN(self.config,self.vocab.wordVectors)
+        self.model = Model(self.config,self.vocab.wordVectors)
         self.model.build()
         self.loss = self.model.loss
         self.add_optimizer()
@@ -122,19 +121,12 @@ class JCNNModel(BaseModel):
         for tag in tag_prediction:
             pred_tags.append(tag)
 
-        #print(len(pred_tags))
-        tag_precision, tag_recall, tag_f1_score, status = precision_recall_fscore_support(tags,np.array(pred_tags),
-                                                                              labels=range(0, self.config.num_tags),
-                                                                              pos_label=None,
-                                                                              average='micro')
-        print('tag 0',tag_precision, tag_recall, tag_f1_score)
-
         tag_precision, tag_recall, tag_f1_score, status = precision_recall_fscore_support(tags,np.array(pred_tags),
                                                                               labels=range(1, self.config.num_tags),
                                                                               pos_label=None,
                                                                               average='micro')
 
-        print('tag 1',tag_precision, tag_recall, tag_f1_score)
+        print('tag',tag_precision, tag_recall, tag_f1_score)
 
         if len(self.config.cls_names) > 0:
             tmp = len(self.config.cls_names)

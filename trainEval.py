@@ -49,10 +49,9 @@ if __name__ == '__main__':
     test_ids = loadIds(testIdFile)
 
 
-    doc_tokens, doc_tags = load_extractions(config.extraction_file)
-
-    doc_cls = load_classifications(config.classification_file)
-    doc_forms = load_forms(config.forms_file)
+    doc_tokens, doc_tags = load_extractions(config.extraction_file) #key element extraction file
+    doc_cls = load_classifications(config.classification_file) #class label file
+    doc_forms = load_forms(config.forms_file) #harassform label file from previous work
 
     doc_tokens, doc_tags =segment_sentences_train(doc_tokens, doc_tags, config.delimiters)
 
