@@ -1,12 +1,12 @@
 # harassment-analysis
-This repositary is for harassment analysis on safeCity data. 
+This repository is for harassment analysis on safeCity data. This work is a research project expanding the work in paper, "SafeCity: Understanding Diverse Forms of Sexual Harassment Personal Stories".
+The original data sets for experiment and raw text are available on https://github.com/swkarlekar/safecity. The reports is public available on http://www.maps.safecity.in/reports.
+Please contact SafeCity moderators at http://maps.safecity.in/contact for permission before the use of this data. We thank the SafeCity moderators for granting the permission of using the data.
 
-story_and_category.csv file
--	This file contains all the stories up to date and their corresponding categories regarding the harassment types
+The annotation data of key element and story classifications are located in /data directory. The id are corresponding to order of the story
+in each of the train, dev, test dataset published on https://github.com/swkarlekar/safecity. This data is for research purposes only.
 
-key_info_and_classes_part.csv
--	Currently only contains part of the labeled online stories. 
--	More stories will be added after they are cleaned, e.g. sensitive data being handled properly.
+
 
 The meaning of the integer labels are:
 harasser_types:
