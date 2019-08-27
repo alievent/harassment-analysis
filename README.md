@@ -3,7 +3,7 @@ This repository is for harassment analysis on safeCity data. This work is a rese
 The original data sets for experiment and raw text are available on https://github.com/swkarlekar/safecity. The reports is public available on http://www.maps.safecity.in/reports.
 Please contact SafeCity moderators at http://maps.safecity.in/contact for permission before the use of this data. We thank the SafeCity moderators for granting the permission of using the data.
 
-The annotation data of key element and story classifications are located in /data directory. The id are corresponding to order of the story
+The annotation data of key element and story classifications are located in /data directory. The ids ( in each of the train, dev, test file) are corresponding to order of the stories
 in each of the train, dev, test dataset published on https://github.com/swkarlekar/safecity. This data is for research purposes only.
 
 
@@ -44,8 +44,6 @@ location_types:
 Train and Eval
 
 use trainEval.py to train a model specified by a config file.
-- The "extraction_file" refer to path to key element annotation files (.json).
-- The "classification_file" refer to class label file (.csv)
 
 model implementations are in models
 
